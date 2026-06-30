@@ -28,13 +28,26 @@ deploy_sidecar() {
   local dir="$2"
   local image="$3"
   echo "--- Deploying ${name} from ${dir} ---"
+
+  if [[ ! -f "${dir}/.env" ]]; then
+    echo "ERROR: ${dir}/.env not found."
+    echo "Copy docker/.env.example to .env and set DEEPSEEK_* and LANGFUSE_* before deploy."
+    exit 1
+  fi
+
   cd "${dir}"
   git pull origin main
   docker pull "${image}"
-  docker compose -f docker/compose.yml up -d
+  # --env-file loads repo-root .env for ${VAR} interpolation (compose project dir is docker/)
+  docker compose -f docker/compose.yml --env-file .env up -d
 }
 
 deploy_sidecar "RSS sidecar" "${RSS_DIR}" "ghcr.io/nanlindev/n8n_portfolio/python-ai-service:latest"
 deploy_sidecar "CRM sidecar" "${CRM_DIR}" "ghcr.io/nanlindev/crm-workflow/python-ai-service:latest"
 
-echo "Sidecars up. RSS :8001, CRM :8002 (host) -> crm_python_ai / rss_python_ai on n8n_platform."
+echo ""
+echo "Sidecars deployed."
+echo "  RSS: http://localhost:8001/health  (service: rss_python_ai)"
+echo "  CRM: http://localhost:8002/health  (service: crm_python_ai)"
+echo ""
+echo "Networks: n8n_platform (n8n <-> sidecars), proxy_network (OTEL/Langfuse)"

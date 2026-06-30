@@ -29,6 +29,8 @@ on:
         required: true
       SSH_PRIVATE_KEY:
         required: true
+      GITHUB_TOKEN:
+        required: true
 
 env:
   REGISTRY: ghcr.io
@@ -100,8 +102,12 @@ jobs:
 
             cd ${{ inputs.deploy_path }}
             git pull origin main
+            if [ ! -f .env ]; then
+              echo "ERROR: ${{ inputs.deploy_path }}/.env missing"
+              exit 1
+            fi
             docker pull ${{ inputs.python_image_name }}:latest
-            docker compose -f ${{ inputs.compose_file }} up -d
+            docker compose -f ${{ inputs.compose_file }} --env-file .env up -d
             docker image prune -f
             docker logout ghcr.io
 

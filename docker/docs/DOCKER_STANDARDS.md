@@ -18,10 +18,17 @@ All project repos must be **siblings** of `platform-n8n` so compose `include` pa
 
 ## Networks
 
-| Network | Owner | Purpose |
-|---------|-------|---------|
-| `n8n_platform` | platform-n8n deploy | Shared bridge for n8n + project sidecars |
-| `proxy_network` | otel-collector-stack | OBS connectivity (external) |
+Both networks are **pre-created** by `ensure-networks.sh` and declared **`external: true`** in compose (same pattern as `proxy_network`). Do not let compose create `n8n_platform` itself — that conflicts with the script-created network.
+
+| Network | Created by | Who joins | Purpose |
+|---------|------------|-----------|---------|
+| `n8n_platform` | `ensure-networks.sh` | `n8n_app`, `rss_python_ai`, `crm_python_ai` | n8n HTTP calls to sidecars by service name |
+| `proxy_network` | otel-collector deploy / `ensure-networks.sh` | `n8n_app`, sidecars, OBS stacks | OTEL → `otel-collector`, Langfuse → `langfuse-web` |
+
+**Sidecars use both networks** (see `docker/templates/python-sidecar.base.yml`):
+
+- `n8n_platform` — so shared n8n can reach `http://rss_python_ai:8001` / `http://crm_python_ai:8001`
+- `proxy_network` — so sidecars export traces and reach Langfuse (same as before the refactor)
 
 Create before any deploy:
 

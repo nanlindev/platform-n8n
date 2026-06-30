@@ -1,6 +1,8 @@
+# Both networks are pre-created by scripts/ensure-networks.sh and referenced as external.
 networks:
   n8n_platform:
+    external: true
     name: n8n_platform
-    driver: bridge
   proxy_network:
     external: true
+    name: proxy_network

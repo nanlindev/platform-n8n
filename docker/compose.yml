@@ -61,7 +61,3 @@ services:
 volumes:
   postgres_data:
   n8n_data:
-
-networks:
-  proxy_network:
-    external: true
