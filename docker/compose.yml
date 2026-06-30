@@ -63,7 +63,5 @@ volumes:
   n8n_data:
 
 networks:
-  n8n_platform:
-    external: true
   proxy_network:
     external: true
