@@ -1,3 +1,5 @@
+name: platform-n8n
+
 include:
   - path: templates/networks.yml
 

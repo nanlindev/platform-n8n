@@ -20,10 +20,9 @@ on:
         required: false
         type: string
         default: python-service/Dockerfile
-      platform_repo_path:
-        required: false
+      compose_service:
+        required: true
         type: string
-        default: ../platform-n8n
     secrets:
       SSH_HOST:
         required: true
@@ -87,16 +86,20 @@ jobs:
           username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -euo pipefail
+
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u nanlindev --password-stdin
 
             PLATFORM_DIR="/home/deploy/projects/platform-n8n"
-            if [ -d "$PLATFORM_DIR" ]; then
-              chmod +x "$PLATFORM_DIR/scripts/ensure-networks.sh"
-              "$PLATFORM_DIR/scripts/ensure-networks.sh"
-            else
-              docker network create proxy_network --driver bridge 2>/dev/null || true
-              docker network create n8n_platform --driver bridge 2>/dev/null || true
+            if [ ! -d "$PLATFORM_DIR" ]; then
+              git clone https://github.com/nanlindev/platform-n8n.git "$PLATFORM_DIR"
             fi
+            git -C "$PLATFORM_DIR" pull origin main
+            chmod +x "$PLATFORM_DIR/scripts/ensure-networks.sh"
+            "$PLATFORM_DIR/scripts/ensure-networks.sh"
+
+            grep -q 'external: true' "$PLATFORM_DIR/docker/templates/networks.yml" \
+              || { echo "ERROR: platform-n8n networks.yml missing external: true — git pull platform-n8n"; exit 1; }
 
             cd ${{ inputs.deploy_path }}
             git pull origin main
@@ -104,8 +107,19 @@ jobs:
               echo "ERROR: ${{ inputs.deploy_path }}/.env missing"
               exit 1
             fi
+
             docker pull ${{ inputs.python_image_name }}:latest
-            docker compose -f ${{ inputs.compose_file }} --env-file .env up -d
+            docker compose -f ${{ inputs.compose_file }} --env-file .env up -d --remove-orphans
+
+            # Fail the job if the sidecar is not running
+            docker compose -f ${{ inputs.compose_file }} --env-file .env ps
+            running="$(docker compose -f ${{ inputs.compose_file }} --env-file .env ps --status running -q "${{ inputs.compose_service }}" | wc -l)"
+            if [ "$running" -lt 1 ]; then
+              echo "ERROR: service ${{ inputs.compose_service }} is not running"
+              docker compose -f ${{ inputs.compose_file }} --env-file .env logs --tail=50 "${{ inputs.compose_service }}" || true
+              exit 1
+            fi
+
             docker image prune -f
             docker logout ghcr.io
 

@@ -46,13 +46,17 @@ Test from shared n8n: HTTP nodes reach sidecars.
 
 ## Phase 4 — Cutover
 
-1. Stop legacy n8n containers (keep volumes):
+1. **Stop legacy n8n containers** (old RSS/CRM full stacks — project name was `docker`):
+
    ```bash
-   # In old n8n_portfolio root compose (if still running legacy stack)
-   docker compose stop n8n_app
-   # In old crm-workflow root compose
-   docker compose stop n8n_app
+   docker stop docker-n8n_app-1 docker-n8n_postgres-1 2>/dev/null || true
+   docker rm docker-n8n_app-1 docker-n8n_postgres-1 2>/dev/null || true
+   # If CRM legacy n8n existed on :5679, stop those too (project name may differ)
+   docker ps --filter "publish=5679" --format '{{.Names}}' | xargs -r docker stop
    ```
+
+   Do **not** delete old `n8n_data` / `postgres_data` volumes until cutover is verified.
+
 2. Set `N8N_PORT=5678` in platform-n8n `.env`, restart platform:
    ```bash
    cd /home/deploy/projects/platform-n8n

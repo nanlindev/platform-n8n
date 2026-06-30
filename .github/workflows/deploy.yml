@@ -16,6 +16,8 @@ jobs:
           username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -euo pipefail
+
             PROJECT_DIR="/home/deploy/projects/platform-n8n"
             if [ ! -d "$PROJECT_DIR" ]; then
               echo "First deployment: cloning repository..."
@@ -23,8 +25,22 @@ jobs:
             fi
             cd "$PROJECT_DIR"
             git pull origin main
+
+            if [ ! -f .env ]; then
+              echo "ERROR: $PROJECT_DIR/.env missing — copy from .env.example"
+              exit 1
+            fi
+
             chmod +x scripts/ensure-networks.sh
             ./scripts/ensure-networks.sh
-            docker compose -f docker/compose.yml pull
-            docker compose -f docker/compose.yml up -d
+            docker compose -f docker/compose.yml --env-file .env pull
+            docker compose -f docker/compose.yml --env-file .env up -d
+
+            running="$(docker compose -f docker/compose.yml --env-file .env ps --status running -q n8n_app | wc -l)"
+            if [ "$running" -lt 1 ]; then
+              echo "ERROR: n8n_app is not running"
+              docker compose -f docker/compose.yml --env-file .env logs --tail=50 n8n_app || true
+              exit 1
+            fi
+
             docker image prune -f
