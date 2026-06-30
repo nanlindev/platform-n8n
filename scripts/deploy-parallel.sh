@@ -28,7 +28,7 @@ set_env_port
 echo "Deploying platform-n8n on port ${PARALLEL_PORT}..."
 "${SCRIPT_DIR}/ensure-networks.sh"
 docker compose -f "${COMPOSE_FILE}" pull
-docker compose -f "${COMPOSE_FILE}" up -d
+docker compose --env-file /home/deploy/projects/platform-n8n/.env -f "${COMPOSE_FILE}" up -d
 
 echo "Platform n8n: http://localhost:${PARALLEL_PORT}"
 echo "Next: import workflows, then ./scripts/deploy-sidecars.sh"
