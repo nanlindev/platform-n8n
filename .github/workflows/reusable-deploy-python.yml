@@ -1,0 +1,118 @@
+name: Reusable Deploy Python Sidecar
+
+on:
+  workflow_call:
+    inputs:
+      python_image_name:
+        required: true
+        type: string
+      deploy_path:
+        required: true
+        type: string
+      compose_file:
+        required: false
+        type: string
+        default: docker/compose.yml
+      build_context:
+        required: true
+        type: string
+      dockerfile:
+        required: false
+        type: string
+        default: python-service/Dockerfile
+      platform_repo_path:
+        required: false
+        type: string
+        default: ../platform-n8n
+    secrets:
+      SSH_HOST:
+        required: true
+      SSH_PRIVATE_KEY:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push-python:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Python Service
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ inputs.python_image_name }}
+          tags: |
+            type=sha,prefix=
+            type=ref,event=branch
+            latest
+
+      - name: Build and push Python AI Service image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.build_context }}
+          file: ${{ inputs.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push-python
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u nanlindev --password-stdin
+
+            PLATFORM_DIR="/home/deploy/projects/platform-n8n"
+            if [ -d "$PLATFORM_DIR" ]; then
+              chmod +x "$PLATFORM_DIR/scripts/ensure-networks.sh"
+              "$PLATFORM_DIR/scripts/ensure-networks.sh"
+            else
+              docker network create proxy_network --driver bridge 2>/dev/null || true
+              docker network create n8n_platform --driver bridge 2>/dev/null || true
+            fi
+
+            cd ${{ inputs.deploy_path }}
+            git pull origin main
+            docker pull ${{ inputs.python_image_name }}:latest
+            docker compose -f ${{ inputs.compose_file }} up -d
+            docker image prune -f
+            docker logout ghcr.io
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "Deployment successful!"
+          else
+            echo "Deployment failed!"
+            exit 1
+          fi

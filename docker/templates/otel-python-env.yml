@@ -1,0 +1,13 @@
+# Shared Python sidecar OpenTelemetry + Langfuse environment variables.
+x-python-otel-env: &python-otel-env
+  DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+  DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}
+  DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-v4-flash}
+  LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+  LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+  LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+  ENVIRONMENT: ${ENVIRONMENT:-development}
+  LANGFUSE_TRACING_ENVIRONMENT: ${ENVIRONMENT:-development}
+  OTEL_TRACES_EXPORTER: otlp
+  OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318

@@ -1,0 +1,30 @@
+name: Deploy Platform n8n
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            PROJECT_DIR="/home/deploy/projects/platform-n8n"
+            if [ ! -d "$PROJECT_DIR" ]; then
+              echo "First deployment: cloning repository..."
+              git clone https://github.com/nanlindev/platform-n8n.git "$PROJECT_DIR"
+            fi
+            cd "$PROJECT_DIR"
+            git pull origin main
+            chmod +x scripts/ensure-networks.sh
+            ./scripts/ensure-networks.sh
+            docker compose -f docker/compose.yml pull
+            docker compose -f docker/compose.yml up -d
+            docker image prune -f

@@ -1,0 +1,6 @@
+networks:
+  n8n_platform:
+    name: n8n_platform
+    driver: bridge
+  proxy_network:
+    external: true

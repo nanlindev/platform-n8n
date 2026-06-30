@@ -1,0 +1,3 @@
+# Wrapper — use docker/compose.yml
+include:
+  - path: docker/compose.yml
