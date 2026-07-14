@@ -18,7 +18,7 @@ Shared n8n runtime and Docker templates for automation projects (RSS, CRM, and f
 ```bash
 cp .env.example .env
 ./scripts/ensure-networks.sh
-docker compose -f docker/compose.yml up -d
+docker compose --env-file .env -f docker/compose.yml up -d
 ```
 
 Requires sibling OBS stacks on `proxy_network` for full observability.

@@ -24,7 +24,7 @@ services:
       - n8n_platform
 
   n8n_app:
-    image: n8nio/n8n
+    image: n8nio/n8n:2.28.7
     restart: always
     env_file:
       - ../.env
@@ -39,6 +39,7 @@ services:
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
       NO_PROXY: ${NO_PROXY:-}
+      WEBHOOK_URL: ${WEBHOOK_URL:-}
       N8N_OTEL_ENABLED: "true"
       N8N_OTEL_EXPORTER_SERVICE_NAME: n8n-platform
       N8N_OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318

@@ -16,7 +16,11 @@ cp .env.example .env
 # Edit .env — set POSTGRES_PASSWORD, N8N_PORT if needed
 
 ./scripts/ensure-networks.sh
-docker compose -f docker/compose.yml up -d
+# Use repo-root .env (compose -f docker/compose.yml alone reads env from docker/, not ../)
+docker compose --env-file .env -f docker/compose.yml up -d
+
+# Equivalent: from repo root, wrapper compose loads .env automatically
+# docker compose up -d
 ```
 
 Open n8n: http://localhost:5678 (or `N8N_PORT`).
