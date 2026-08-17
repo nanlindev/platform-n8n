@@ -9,6 +9,7 @@ lindev/                          projects/  (production)
 ├── platform-n8n/                ├── platform-n8n/
 ├── n8n_portfolio/               ├── n8n_portfolio/
 ├── crm-workflow/                ├── crm-workflow/
+├── ecom-workflow/               ├── ecom-workflow/
 ├── otel-collector-stack/        ├── otel-collector-stack/
 ├── jaeger-stack/                ├── jaeger-stack/
 └── langfuse-stack/              └── langfuse-stack/
@@ -22,12 +23,12 @@ Both networks are **pre-created** by `ensure-networks.sh` and declared **`extern
 
 | Network | Created by | Who joins | Purpose |
 |---------|------------|-----------|---------|
-| `n8n_platform` | `ensure-networks.sh` | `n8n_app`, `rss_python_ai`, `crm_python_ai` | n8n HTTP calls to sidecars by service name |
+| `n8n_platform` | `ensure-networks.sh` | `n8n_app`, `rss_python_ai`, `crm_python_ai`, `ecom_python_ai`, `ecom_postgres` | n8n HTTP calls to sidecars by service name |
 | `proxy_network` | otel-collector deploy / `ensure-networks.sh` | `n8n_app`, sidecars, OBS stacks | OTEL → `otel-collector`, Langfuse → `langfuse-web` |
 
 **Sidecars use both networks** (see `docker/templates/python-sidecar.base.yml`):
 
-- `n8n_platform` — so shared n8n can reach `http://rss_python_ai:8001` / `http://crm_python_ai:8001`
+- `n8n_platform` — so shared n8n can reach `http://rss_python_ai:8001` / `http://crm_python_ai:8001` / `http://ecom_python_ai:8001`
 - `proxy_network` — so sidecars export traces and reach Langfuse (same as before the refactor)
 
 Create before any deploy:
@@ -43,7 +44,8 @@ Create before any deploy:
 | n8n (platform) | 5678 | Production; use 5680 during parallel migration |
 | RSS sidecar | 8001 | `rss_python_ai` |
 | CRM sidecar | 8002 | `crm_python_ai` |
-| Postgres | internal only | Not exposed on platform runtime |
+| Ecom sidecar | 8003 | `ecom_python_ai` |
+| Postgres | internal only | Platform n8n DB and project DBs (e.g. `ecom_postgres`) not exposed on host by default |
 
 ## Service naming
 
@@ -52,6 +54,8 @@ Create before any deploy:
 | `n8n_app` | platform | n8n UI / webhooks |
 | `rss_python_ai` | n8n_portfolio | `http://rss_python_ai:8001/analyze` |
 | `crm_python_ai` | crm-workflow | `http://crm_python_ai:8001/enrich`, `/score` |
+| `ecom_python_ai` | ecom-workflow | `http://ecom_python_ai:8001/health`, `/prompts` (pricing/insights P2+) |
+| `ecom_postgres` | ecom-workflow | Business SoT (JSONB); not the platform n8n Postgres |
 
 ## OTEL / Langfuse naming
 
@@ -60,6 +64,7 @@ Create before any deploy:
 | Platform n8n | `n8n-platform` | — |
 | RSS sidecar | `n8n-rss-ai-service` | `rss-filter` |
 | CRM sidecar | `n8n-crm-ai-service` | `crm-workflow` |
+| Ecom sidecar | `n8n-ecom-ai-service` | `ecom-workflow` |
 
 ## Environment files
 
@@ -88,7 +93,7 @@ Templates: `docker/templates/env.platform.example`, `env.project-sidecar.example
 
 1. OBS stacks: otel-collector → jaeger → langfuse
 2. `platform-n8n` (shared n8n)
-3. Project sidecars: `n8n_portfolio`, `crm-workflow`
+3. Project sidecars: `n8n_portfolio`, `crm-workflow`, `ecom-workflow`
 4. Import/update n8n workflows manually
 
 ## New project checklist

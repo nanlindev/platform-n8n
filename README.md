@@ -29,6 +29,7 @@ Projects reference templates from `../platform-n8n/docker/templates/` and run th
 
 - `../n8n_portfolio` — RSS (`rss_python_ai`, port 8001)
 - `../crm-workflow` — CRM (`crm_python_ai`, port 8002)
+- `../ecom-workflow` — Ecom (`ecom_python_ai`, port 8003; `ecom_postgres`)
 
 ## Deploy paths
 
