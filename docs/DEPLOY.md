@@ -33,7 +33,8 @@ GitHub Actions deploys on push to `main`. Manual deploy:
 
 ```bash
 cd /home/deploy/projects/platform-n8n
-git pull origin main
+git fetch origin main
+git reset --hard origin/main
 ./scripts/ensure-networks.sh
 docker compose -f docker/compose.yml pull
 docker compose -f docker/compose.yml up -d

@@ -90,11 +90,18 @@ jobs:
 
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u nanlindev --password-stdin
 
+            # Deploy checkouts must match origin/main. Uncommitted tracked edits (e.g. shopify.app.toml)
+            # must not block pull. Untracked .env is left intact.
+            sync_to_origin_main() {
+              git -C "$1" fetch origin main
+              git -C "$1" reset --hard origin/main
+            }
+
             PLATFORM_DIR="/home/deploy/projects/platform-n8n"
             if [ ! -d "$PLATFORM_DIR" ]; then
               git clone https://github.com/nanlindev/platform-n8n.git "$PLATFORM_DIR"
             fi
-            git -C "$PLATFORM_DIR" pull origin main
+            sync_to_origin_main "$PLATFORM_DIR"
             chmod +x "$PLATFORM_DIR/scripts/ensure-networks.sh"
             "$PLATFORM_DIR/scripts/ensure-networks.sh"
 
@@ -102,7 +109,8 @@ jobs:
               || { echo "ERROR: platform-n8n networks.yml missing external: true — git pull platform-n8n"; exit 1; }
 
             cd ${{ inputs.deploy_path }}
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             if [ ! -f .env ]; then
               echo "ERROR: ${{ inputs.deploy_path }}/.env missing"
               exit 1
@@ -110,6 +118,7 @@ jobs:
 
             docker pull ${{ inputs.python_image_name }}:latest
             docker compose -f ${{ inputs.compose_file }} --env-file .env up -d --remove-orphans
+            docker compose -f ${{ inputs.compose_file }} --env-file .env up -d --no-deps --force-recreate "${{ inputs.compose_service }}"
 
             # Fail the job if the sidecar is not running
             docker compose -f ${{ inputs.compose_file }} --env-file .env ps

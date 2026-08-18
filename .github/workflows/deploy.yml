@@ -24,7 +24,8 @@ jobs:
               git clone https://github.com/nanlindev/platform-n8n.git "$PROJECT_DIR"
             fi
             cd "$PROJECT_DIR"
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             if [ ! -f .env ]; then
               echo "ERROR: $PROJECT_DIR/.env missing — copy from .env.example"
