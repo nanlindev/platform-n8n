@@ -99,7 +99,8 @@ Templates: `docker/templates/env.platform.example`, `env.project-sidecar.example
 ## New project checklist
 
 1. Create `docker/compose.yml` including platform templates
-2. Assign unique sidecar service name and host port
-3. Add workflow tag for filtering in shared n8n
-4. Document in project `docker/DEPLOY.md`
-5. Register port in this file
+2. Create root `docker-compose.yml` wrapper (`include: - path: docker/compose.yml`) — required for shell `dup`/`ddown` aliases at repo root
+3. Assign unique sidecar service name and host port
+4. Add workflow tag for filtering in shared n8n
+5. Document in project `docker/DEPLOY.md`
+6. Register port in this file
