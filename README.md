@@ -12,6 +12,8 @@ Shared n8n runtime and Docker templates for automation projects (RSS, CRM, and f
 | `scripts/ensure-networks.sh` | Create `proxy_network` and `n8n_platform` |
 | `docs/DEPLOY.md` | Platform deployment guide |
 | `docs/MIGRATION_RUNBOOK.md` | Production cutover steps |
+| `docs/EXECUTION_MAP_PRD.md` | Full-flow execution map (custom list + cross-WF canvas) — PRD |
+| `execution-map/` | Read-only bypass viewer (Vite + React Flow); see `execution-map/README.md` |
 
 ## Quick start (local)
 
