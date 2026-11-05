@@ -58,18 +58,26 @@ jobs:
             # Parse N8N_PORT without sourcing .env (values may break bash).
             PORT="$(awk -F= '/^N8N_PORT=/{print $2; exit}' .env | tr -d \"'\" || true)"
             PORT="${PORT:-5678}"
-            echo "Waiting for /healthz on :$PORT ..."
+            # 2.28 → 2.46 may run many DB migrations; allow up to ~10 minutes.
+            echo "Waiting for /healthz on :$PORT (up to 10m) ..."
             ok=0
-            for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            i=0
+            while [ "$i" -lt 120 ]; do
+              i=$((i + 1))
               if curl -sf --max-time 5 "http://127.0.0.1:${PORT}/healthz" >/tmp/n8n_healthz.json; then
                 ok=1
+                echo "healthz OK after attempt $i"
                 break
+              fi
+              if [ $((i % 6)) -eq 0 ]; then
+                echo "still waiting for healthz (attempt $i) ..."
+                docker compose -f docker/compose.yml --env-file .env ps n8n_app || true
               fi
               sleep 5
             done
             if [ "$ok" != "1" ]; then
-              echo "ERROR: /healthz not OK"
-              docker compose -f docker/compose.yml --env-file .env logs --tail=80 n8n_app || true
+              echo "ERROR: /healthz not OK after migrations wait"
+              docker compose -f docker/compose.yml --env-file .env logs --tail=120 n8n_app || true
               exit 1
             fi
             cat /tmp/n8n_healthz.json || true
@@ -77,6 +85,7 @@ jobs:
             echo "n8n --version: $VER"
             echo "$VER" | grep -q '2\.46\.4' || {
               echo "ERROR: expected n8n 2.46.4, got: $VER"
+              docker compose -f docker/compose.yml --env-file .env logs --tail=80 n8n_app || true
               exit 1
             }
 
