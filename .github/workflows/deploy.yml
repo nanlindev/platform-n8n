@@ -55,9 +55,12 @@ jobs:
             fi
 
             # Post-upgrade sanity (no Public API key required).
-            # Avoid single-quotes in this block: appleboy wraps the script in bash -c.
-            PORT="$(awk -F= '/^N8N_PORT=/{gsub(/"/,"",$2); print $2; exit}' .env || true)"
-            PORT="${PORT:-5678}"
+            # No single-quotes anywhere below: appleboy runs the script via bash -c.
+            PORT=5678
+            if grep -q "^N8N_PORT=" .env; then
+              PORT=$(grep "^N8N_PORT=" .env | head -1 | cut -d= -f2- | tr -cd "0-9")
+              PORT=${PORT:-5678}
+            fi
             # 2.28 -> 2.46 may run many DB migrations; allow up to ~10 minutes.
             echo "Waiting for /healthz on :$PORT (up to 10m) ..."
             ok=0
