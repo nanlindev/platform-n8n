@@ -55,10 +55,10 @@ jobs:
             fi
 
             # Post-upgrade sanity (no Public API key required).
-            # Parse N8N_PORT without sourcing .env (values may break bash).
-            PORT="$(awk -F= '/^N8N_PORT=/{print $2; exit}' .env | tr -d \"'\" || true)"
+            # Avoid single-quotes in this block: appleboy wraps the script in bash -c.
+            PORT="$(awk -F= '/^N8N_PORT=/{gsub(/"/,"",$2); print $2; exit}' .env || true)"
             PORT="${PORT:-5678}"
-            # 2.28 → 2.46 may run many DB migrations; allow up to ~10 minutes.
+            # 2.28 -> 2.46 may run many DB migrations; allow up to ~10 minutes.
             echo "Waiting for /healthz on :$PORT (up to 10m) ..."
             ok=0
             i=0
@@ -81,9 +81,9 @@ jobs:
               exit 1
             fi
             cat /tmp/n8n_healthz.json || true
-            VER="$(docker compose -f docker/compose.yml --env-file .env exec -T n8n_app n8n --version | tr -d '\r')"
+            VER="$(docker compose -f docker/compose.yml --env-file .env exec -T n8n_app n8n --version | tr -d "\r")"
             echo "n8n --version: $VER"
-            echo "$VER" | grep -q '2\.46\.4' || {
+            echo "$VER" | grep -q "2\.46\.4" || {
               echo "ERROR: expected n8n 2.46.4, got: $VER"
               docker compose -f docker/compose.yml --env-file .env logs --tail=80 n8n_app || true
               exit 1
