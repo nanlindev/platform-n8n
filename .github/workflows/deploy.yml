@@ -15,8 +15,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Backup + pull can exceed default 10m (image pull)
-          command_timeout: 30m
+          # Backup + image pull can exceed default; keep generous timeout.
+          command_timeout: 40m
           script: |
             set -euo pipefail
 
@@ -40,7 +40,7 @@ jobs:
             if [ "${SKIP_PRE_DEPLOY_BACKUP:-}" = "1" ]; then
               echo "SKIP_PRE_DEPLOY_BACKUP=1 — skipping backup"
             else
-              ./scripts/backup_n8n_pre_deploy.sh
+              bash scripts/backup_n8n_pre_deploy.sh
             fi
 
             ./scripts/ensure-networks.sh
@@ -54,12 +54,10 @@ jobs:
               exit 1
             fi
 
-            # Post-upgrade sanity (no Public API key required)
-            set -a
-            # shellcheck disable=SC1091
-            source .env
-            set +a
-            PORT="${N8N_PORT:-5678}"
+            # Post-upgrade sanity (no Public API key required).
+            # Parse N8N_PORT without sourcing .env (values may break bash).
+            PORT="$(awk -F= '/^N8N_PORT=/{print $2; exit}' .env | tr -d \"'\" || true)"
+            PORT="${PORT:-5678}"
             echo "Waiting for /healthz on :$PORT ..."
             ok=0
             for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
@@ -76,7 +74,7 @@ jobs:
             fi
             cat /tmp/n8n_healthz.json || true
             VER="$(docker compose -f docker/compose.yml --env-file .env exec -T n8n_app n8n --version | tr -d '\r')"
-            echo "n8n --version → $VER"
+            echo "n8n --version: $VER"
             echo "$VER" | grep -q '2\.46\.4' || {
               echo "ERROR: expected n8n 2.46.4, got: $VER"
               exit 1

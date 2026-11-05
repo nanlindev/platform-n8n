@@ -14,12 +14,8 @@ if [[ ! -f .env ]]; then
   exit 1
 fi
 
-# shellcheck disable=SC1091
-set -a
-# shellcheck source=/dev/null
-source .env
-set +a
-
+# Do NOT `source .env` — production .env often has values that break bash parsing.
+# Compose/`docker exec` already inject service env from env_file.
 COMPOSE=(docker compose -f docker/compose.yml --env-file .env)
 BACKUP_ROOT="${BACKUP_ROOT:-/home/deploy/backups}"
 KEEP="${BACKUP_KEEP:-5}"
@@ -88,16 +84,13 @@ echo "OK  volume $VOL_NAME → n8n_data.tar.gz (${TAR_BYTES} bytes)"
 echo "OK  MANIFEST.txt"
 ls -la "$DEST"
 
-# Retention: keep newest $KEEP backup dirs
+# Retention: keep newest $KEEP backup dirs (portable; no process substitution)
 if [[ "$KEEP" =~ ^[0-9]+$ ]] && [[ "$KEEP" -gt 0 ]]; then
-  i=0
-  while IFS= read -r d; do
-    i=$((i + 1))
-    if [[ "$i" -gt "$KEEP" ]]; then
-      echo "prune old backup: $d"
-      rm -rf "$d"
-    fi
-  done < <(ls -1dt "${BACKUP_ROOT}"/n8n-*-pre-deploy 2>/dev/null || true)
+  ls -1dt "${BACKUP_ROOT}"/n8n-*-pre-deploy 2>/dev/null | tail -n +"$((KEEP + 1))" | while IFS= read -r d; do
+    [[ -n "$d" ]] || continue
+    echo "prune old backup: $d"
+    rm -rf "$d"
+  done || true
 fi
 
 echo "PASS backup_n8n_pre_deploy → $DEST"
