@@ -1,6 +1,6 @@
 # Execution Map (M2 MVP)
 
-Read-only bypass viewer for n8n **2.28.7**: list executions (WF tag / name filter) → cross-workflow React Flow map (solid node edges, dashed parent→child) → truncated I/O + deep link into the official editor.
+Read-only bypass viewer for n8n **2.46.4**: list executions (WF tag / name filter) → cross-workflow React Flow map (solid node edges, dashed parent→child) → truncated I/O + deep link into the official editor.
 
 Does **not** call Jaeger / OTel. Does **not** fork n8n.
 

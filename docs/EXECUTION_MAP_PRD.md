@@ -1,8 +1,8 @@
 # PRD — n8n 全流程执行图（Execution Map）
 
-**状态：** Draft（**M1 spike + M2 MVP 2026-10-20**；硬失败红样待现网补验）  
-**日期：** 2026-10-19（spike/M2：2026-10-20）  
-**钉版本：** `n8nio/n8n:2.28.7`（本地 + Nan 远程 `platform-n8n`）  
+**状态：** Draft（**M1 spike + M2 MVP 2026-10-20**；硬失败红样 **2026-11-04 本地 2.46.4 补验通过**）  
+**日期：** 2026-10-19（spike/M2：2026-10-20；红样：2026-11-04）  
+**钉版本：** `n8nio/n8n:2.46.4`（本地已升；远程待 U8）  
 **受众：** 自用 + 作品展示；非多租户产品  
 **Spike 真源：** [`EXECUTION_MAP_SPIKE.md`](./EXECUTION_MAP_SPIKE.md)
 
@@ -34,7 +34,7 @@
 | 无原生父子时：`customData.correlation_id` JOIN | 依赖 Jaeger / OTel |
 | 黄=实际出错且 continue 的节点 | 靠节点命名后缀 / 业务 JSON 嗅探降级 |
 | 按需 `includeData` + I/O 截断 | 客户/Salah 实例；多租户 SaaS |
-| 钉 2.28.7 | 为做地图先大版本升级 |
+| 钉 2.46.4 | 本地已升离 2.28.7；远程随 U8 |
 
 ## 5. 拼图键
 
@@ -49,7 +49,7 @@
 | 色 | 含义 |
 |----|------|
 | 绿 | 节点成功 |
-| 黄 | 节点曾 error / error 输出，但执行继续（continueOnFail / `onError: continueRegularOutput` 等）。**2.28.7 实测：** continue 后节点 `executionStatus` 常仍为 `success`，错误在输出 `json.error`，不一定有 `run.error` — 见 spike §4 |
+| 黄 | 节点曾 error / error 输出，但执行继续（continueOnFail / `onError: continueRegularOutput` 等）。**2.28.7 / 2.46.4 实测：** continue 后节点 `executionStatus` 常仍为 `success`，错误在输出 `json.error`，不一定有 `run.error` — 见 spike §4；U5 fixture exec `1179` |
 | 红 | 硬失败（未 continue / execution failed） |
 | 灰 | 未执行到 |
 
@@ -74,11 +74,11 @@
 
 - [x] 自定义入口可见近期执行；WF tag 可筛；无 tag 可用入口 WF 名。（`execution-map/` 列表页）
 - [x] Execute Sub-workflow 链：一张图含父子，虚线区分关系。（`parentExecution` + `subExecution` → React Flow）
-- [x] 人为 continueOnFail：出错节点黄、整体 success 仍可见。（色启发式按 spike §4；fixture exec `1133` 可点验）
-- [ ] 硬失败节点/单红。（库内暂无 error execution；启发式已实现，待现网样例）
+- [x] 人为 continueOnFail：出错节点黄、整体 success 仍可见。（色启发式按 spike §4；原 fixture `1133` 已不在库；U5 新建 `zz-smoke yellow` exec **1179**，截图 `upgrade-baseline/u5-yellow-1179.png`）
+- [x] 硬失败节点/单红。（`zz-smoke parent` **1182** → `zz-smoke child` **1183**：父子虚线 + Issues 2r；截图 `upgrade-baseline/u5-red-parent-child-1182.png`）
 - [x] 节点可看截断 I/O；可深链官方 execution。
 - [x] 不请求 Jaeger；断 OTel 不影响地图。
-- [x] 钉在 2.28.7 文档与 compose 一致。
+- [x] 钉在 2.46.4：本地 compose + Execution Map 文档一致（远程钉版本随 U8）。
 
 ## 9. 里程碑
 

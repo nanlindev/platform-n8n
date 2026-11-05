@@ -15,6 +15,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: deploy
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Backup + pull can exceed default 10m (image pull)
+          command_timeout: 30m
           script: |
             set -euo pipefail
 
@@ -32,7 +34,15 @@ jobs:
               exit 1
             fi
 
-            chmod +x scripts/ensure-networks.sh
+            chmod +x scripts/ensure-networks.sh scripts/backup_n8n_pre_deploy.sh
+
+            # U8+: backup Postgres + n8n_data BEFORE image pull/up (while old tag still running)
+            if [ "${SKIP_PRE_DEPLOY_BACKUP:-}" = "1" ]; then
+              echo "SKIP_PRE_DEPLOY_BACKUP=1 — skipping backup"
+            else
+              ./scripts/backup_n8n_pre_deploy.sh
+            fi
+
             ./scripts/ensure-networks.sh
             docker compose -f docker/compose.yml --env-file .env pull
             docker compose -f docker/compose.yml --env-file .env up -d
@@ -44,4 +54,33 @@ jobs:
               exit 1
             fi
 
+            # Post-upgrade sanity (no Public API key required)
+            set -a
+            # shellcheck disable=SC1091
+            source .env
+            set +a
+            PORT="${N8N_PORT:-5678}"
+            echo "Waiting for /healthz on :$PORT ..."
+            ok=0
+            for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              if curl -sf --max-time 5 "http://127.0.0.1:${PORT}/healthz" >/tmp/n8n_healthz.json; then
+                ok=1
+                break
+              fi
+              sleep 5
+            done
+            if [ "$ok" != "1" ]; then
+              echo "ERROR: /healthz not OK"
+              docker compose -f docker/compose.yml --env-file .env logs --tail=80 n8n_app || true
+              exit 1
+            fi
+            cat /tmp/n8n_healthz.json || true
+            VER="$(docker compose -f docker/compose.yml --env-file .env exec -T n8n_app n8n --version | tr -d '\r')"
+            echo "n8n --version → $VER"
+            echo "$VER" | grep -q '2\.46\.4' || {
+              echo "ERROR: expected n8n 2.46.4, got: $VER"
+              exit 1
+            }
+
             docker image prune -f
+            echo "PASS remote deploy + healthz + version 2.46.4"

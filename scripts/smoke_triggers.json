@@ -1,0 +1,37 @@
+{
+  "_comment": "Only webhooks with confirmed test gates. Used by smoke_n8n_platform.py --trigger (off by default).",
+  "triggers": [
+    {
+      "id": "crm-tally-lead",
+      "workflow_name": "B2B Lead Intake",
+      "workflow_id": "XHRuUauIjyVCqFnX",
+      "method": "POST",
+      "path": "/webhook/tally-lead",
+      "test_gate": "config_main.mode=test skips HubSpot / GHL / Slack notify / first-touch email (crm TEST_PRODUCTION + RUN_EXAMPLE)",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "sign": {
+        "env_secret": "TALLY_WEBHOOK_SIGNING_KEY",
+        "header": "tally-signature",
+        "algo": "hmac-sha256-base64"
+      },
+      "body": {
+        "eventType": "FORM_RESPONSE",
+        "data": {
+          "formName": "B2B Contact",
+          "formUrl": "https://tally.so/r/platform-n8n-smoke",
+          "fields": [
+            {"label": "Name", "value": "Platform Smoke"},
+            {"label": "Email", "value": "platform.smoke@techscale.io"},
+            {"label": "Role", "value": "Ops"},
+            {"label": "Company", "value": "TechScale Inc"},
+            {"label": "Message", "value": "n8n platform smoke --trigger (test mode)."}
+          ]
+        }
+      },
+      "poll_timeout_s": 180,
+      "success_statuses": ["success"]
+    }
+  ]
+}

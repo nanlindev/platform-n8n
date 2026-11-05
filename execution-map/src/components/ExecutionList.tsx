@@ -66,7 +66,7 @@ export function ExecutionList({
       <header className="list-header">
         <div>
           <h1>Execution Map</h1>
-          <p className="muted">Read-only cross-workflow map · n8n 2.28.7</p>
+          <p className="muted">Read-only cross-workflow map · n8n 2.46.4</p>
         </div>
         <button type="button" className="btn" onClick={onRefresh} disabled={loading}>
           {loading ? 'Loading…' : 'Refresh'}

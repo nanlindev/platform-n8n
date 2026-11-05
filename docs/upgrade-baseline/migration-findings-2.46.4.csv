@@ -1,0 +1,10 @@
+targetVersion,ruleId,status,workflowId,name
+v3,always-output-data-multi-output-v3,open,FLTsot9456zJwh0t,B2B Lead Booking Follow-up
+v3,always-output-data-multi-output-v3,open,jH0ZD3eNPasf3xxa,B2B Lead Calendly Webhook
+v3,always-output-data-multi-output-v3,open,ZNR796lef1EkKI1M,B2B Lead Daily Summary
+v3,always-output-data-multi-output-v3,open,XHRuUauIjyVCqFnX,B2B Lead Intake
+v3,always-output-data-multi-output-v3,open,gbKpdD3cOA9fhHTO,B2B Lead Slack Actions
+v3,always-output-data-multi-output-v3,open,jnV98Vx9TkdIi8dq,B2B Lead Weekly Summary
+v3,always-output-data-multi-output-v3,open,5AkS138nfcyuHzjD,Earls Local — Retry Failed Payments
+v3,always-output-data-multi-output-v3,open,4xujEjeagHpKuZin,Earls Local — Sync Payments to ERPNext
+v3,gmail-trigger-version-v3,open,mh2ZZ8TxX12wwZjC,Doc Email Ingest

@@ -24,7 +24,7 @@ services:
       - n8n_platform
 
   n8n_app:
-    image: n8nio/n8n:2.28.7
+    image: n8nio/n8n:2.46.4
     restart: always
     env_file:
       - ../.env

@@ -1,0 +1,512 @@
+{
+  "n8n_version": "2.28.7",
+  "captured_at": "2026-11-04T15:48:51+08:00",
+  "source": "http://127.0.0.1:5678/api/v1/workflows",
+  "count": 51,
+  "active_count": 9,
+  "archived_count": 16,
+  "workflows": [
+    {
+      "id": "FLTsot9456zJwh0t",
+      "name": "B2B Lead Booking Follow-up",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-09-24T06:05:56.990Z"
+    },
+    {
+      "id": "jH0ZD3eNPasf3xxa",
+      "name": "B2B Lead Calendly Webhook",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-09-24T06:04:27.313Z"
+    },
+    {
+      "id": "QGqb7BgxlXYc9zqp",
+      "name": "B2B Lead CRM Sync Notification",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-10-23T06:13:36.864Z"
+    },
+    {
+      "id": "ZNR796lef1EkKI1M",
+      "name": "B2B Lead Daily Summary",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-09-24T06:03:29.338Z"
+    },
+    {
+      "id": "9zFyIH4vLMDtKPyB",
+      "name": "B2B Lead Enrichment Scoring",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-10-19T05:56:23.142Z"
+    },
+    {
+      "id": "w1TuzC8GiveQXc8W",
+      "name": "B2B Lead Error Handler",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-10-09T12:54:29.458Z"
+    },
+    {
+      "id": "XHRuUauIjyVCqFnX",
+      "name": "B2B Lead Intake",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-10-09T12:52:36.244Z"
+    },
+    {
+      "id": "gbKpdD3cOA9fhHTO",
+      "name": "B2B Lead Slack Actions",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-10-09T09:56:37.284Z"
+    },
+    {
+      "id": "jnV98Vx9TkdIi8dq",
+      "name": "B2B Lead Weekly Summary",
+      "active": true,
+      "isArchived": false,
+      "tags": [
+        "crm-workflow"
+      ],
+      "updatedAt": "2026-09-24T06:02:43.119Z"
+    },
+    {
+      "id": "PtWdusuOMQVIdCpr",
+      "name": "Customer service agent",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n quickstart"
+      ],
+      "updatedAt": "2026-09-23T11:04:17.033Z"
+    },
+    {
+      "id": "c2uPtM7ERjdEXv7U",
+      "name": "Doc Daily Summary",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T06:50:35.214Z"
+    },
+    {
+      "id": "m6Xf6rhwYJxZWlLg",
+      "name": "Doc Drive Ingest",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-07T10:05:03.944Z"
+    },
+    {
+      "id": "mh2ZZ8TxX12wwZjC",
+      "name": "Doc Email Ingest",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-07T09:45:28.621Z"
+    },
+    {
+      "id": "UGC8z0yqaBSfiQXe",
+      "name": "Doc Error Handler",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T06:29:38.951Z"
+    },
+    {
+      "id": "taLv8P82atqFGGjf",
+      "name": "Doc Health Keepalive",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T06:51:01.110Z"
+    },
+    {
+      "id": "4cWFH1t5PKU6uZRr",
+      "name": "Doc Ingest",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T06:30:30.067Z"
+    },
+    {
+      "id": "tHdDvGpwBvRQNzS6",
+      "name": "Doc Post",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T06:49:22.826Z"
+    },
+    {
+      "id": "ehYkmz845y1fTUoO",
+      "name": "Doc Process",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-07T10:27:25.090Z"
+    },
+    {
+      "id": "GfPra9izoNa3Vx0d",
+      "name": "Doc Review",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "doc-workflow"
+      ],
+      "updatedAt": "2026-09-02T07:19:10.372Z"
+    },
+    {
+      "id": "5AkS138nfcyuHzjD",
+      "name": "Earls Local — Retry Failed Payments",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "earls-local"
+      ],
+      "updatedAt": "2026-10-03T15:18:24.214Z"
+    },
+    {
+      "id": "4xujEjeagHpKuZin",
+      "name": "Earls Local — Sync Payments to ERPNext",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "earls-local"
+      ],
+      "updatedAt": "2026-10-03T15:31:59.597Z"
+    },
+    {
+      "id": "AuMXdWHlrN9wZHif",
+      "name": "Earls Local — Uncaught Error to Sync Status",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "earls-local"
+      ],
+      "updatedAt": "2026-10-03T15:30:56.774Z"
+    },
+    {
+      "id": "zgymJO9g0KYsBShW",
+      "name": "Ecom Competitor Price Crawl",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:30:30.093Z"
+    },
+    {
+      "id": "S9CR8iOFBpJGCV9e",
+      "name": "Ecom Customer Insights",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-26T12:38:20.120Z"
+    },
+    {
+      "id": "I6owTmCr07cw238X",
+      "name": "Ecom Daily Summary",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:31:36.262Z"
+    },
+    {
+      "id": "2q3TyVjFQk2oBHxg",
+      "name": "Ecom Error Handler",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T05:07:32.056Z"
+    },
+    {
+      "id": "4u9YXvWFpjVFlSIJ",
+      "name": "Ecom Error Handler",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:32:02.792Z"
+    },
+    {
+      "id": "K87RVjHNVfLEnyXm",
+      "name": "Ecom Health Keepalive",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:32:19.884Z"
+    },
+    {
+      "id": "imqYvlRG66nKAmqK",
+      "name": "Ecom Inventory Sync",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:32:41.834Z"
+    },
+    {
+      "id": "fTBelcsSfP9l65Bt",
+      "name": "Ecom Marketing Orchestrator",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-26T13:31:05.321Z"
+    },
+    {
+      "id": "zw520ODUZPxJgvt3",
+      "name": "Ecom Order Tracker",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:33:47.302Z"
+    },
+    {
+      "id": "Fw7zitHOLHzpmQlz",
+      "name": "Ecom Platform Ingest",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:36:42.086Z"
+    },
+    {
+      "id": "F4ZySQLF1UKYS59K",
+      "name": "Ecom Pricing Engine",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:34:12.978Z"
+    },
+    {
+      "id": "n9QYlch7NhuvHvx5",
+      "name": "Ecom Returns Automation",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:34:44.282Z"
+    },
+    {
+      "id": "gwEs41PumcZc2o6T",
+      "name": "Ecom Slack Actions",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:35:09.975Z"
+    },
+    {
+      "id": "SR0Cps7MZFZPScHF",
+      "name": "Ecom Weekly Summary",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "ecom-workflow"
+      ],
+      "updatedAt": "2026-08-25T07:35:32.643Z"
+    },
+    {
+      "id": "qa18oNDSLZZPDceO",
+      "name": "Generating Reports",
+      "active": false,
+      "isArchived": true,
+      "tags": [],
+      "updatedAt": "2026-09-23T11:04:15.343Z"
+    },
+    {
+      "id": "3TNZlXEImG8nQ1vy",
+      "name": "Merging Data",
+      "active": false,
+      "isArchived": true,
+      "tags": [],
+      "updatedAt": "2026-09-23T11:04:21.758Z"
+    },
+    {
+      "id": "zAiB02sbIRblqzkh",
+      "name": "Monitor Report Errors",
+      "active": false,
+      "isArchived": true,
+      "tags": [],
+      "updatedAt": "2026-09-23T11:04:19.502Z"
+    },
+    {
+      "id": "A4VMrqRFYjnHwfFn",
+      "name": "Nathan's workflow",
+      "active": false,
+      "isArchived": true,
+      "tags": [],
+      "updatedAt": "2026-09-23T11:04:23.647Z"
+    },
+    {
+      "id": "d5unFoRqIr65cWPL",
+      "name": "OBS Kit Facade",
+      "active": false,
+      "isArchived": false,
+      "tags": [
+        "obs-quality-kit"
+      ],
+      "updatedAt": "2026-09-16T08:49:04.800Z"
+    },
+    {
+      "id": "sxNDvPYqEtYyCbgf",
+      "name": "Section 1 - API Integration Pipeline",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n102"
+      ],
+      "updatedAt": "2026-09-23T11:04:10.124Z"
+    },
+    {
+      "id": "n54Ohz5tdmybIZC6",
+      "name": "Section 1 - Feedback Agent",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n103"
+      ],
+      "updatedAt": "2026-09-23T11:04:00.763Z"
+    },
+    {
+      "id": "FQYBlq7ACPL1J7Y8",
+      "name": "Section 1 - Feedback Pipeline",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n103"
+      ],
+      "updatedAt": "2026-09-23T11:04:02.292Z"
+    },
+    {
+      "id": "zeEaIKKulvas0rig",
+      "name": "Section 2 - Debugging Practice",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n103"
+      ],
+      "updatedAt": "2026-09-23T11:03:52.460Z"
+    },
+    {
+      "id": "nngyvD4vKOsQfJUv",
+      "name": "Section 2 - Error Handler (Error Workflow)",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n103"
+      ],
+      "updatedAt": "2026-09-23T11:03:58.528Z"
+    },
+    {
+      "id": "mY6PmdG7gEGG2ObB",
+      "name": "Section 2 - Failure Test",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n103"
+      ],
+      "updatedAt": "2026-09-23T11:03:55.797Z"
+    },
+    {
+      "id": "r0VCC3G5YgxdSu9X",
+      "name": "Section 2 - Fix Broken Workflow",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "foundations-course"
+      ],
+      "updatedAt": "2026-09-23T11:03:49.660Z"
+    },
+    {
+      "id": "1wUllEt39O4IUhRc",
+      "name": "Section 2 - Order Webhook Processor",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n102"
+      ],
+      "updatedAt": "2026-09-23T11:04:05.911Z"
+    },
+    {
+      "id": "n4yD4daYPz0gG7vE",
+      "name": "Section 2 - Process Order (Sub-workflow)",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n102"
+      ],
+      "updatedAt": "2026-09-23T11:04:08.521Z"
+    },
+    {
+      "id": "xtZEjRVECjFL9FXp",
+      "name": "Section 2 - Sales Data Pipeline",
+      "active": false,
+      "isArchived": true,
+      "tags": [
+        "n8n101"
+      ],
+      "updatedAt": "2026-09-23T11:04:13.915Z"
+    }
+  ]
+}
