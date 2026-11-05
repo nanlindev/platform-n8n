@@ -1,8 +1,8 @@
 # n8n 2.x 升级 — job memory
 
-**更新：** 2026-11-05（Nan「升远程」→ U8）  
+**更新：** 2026-11-05（U8 远程 Deploy success）  
 **真源过程记录：** [UPGRADE_2X.md](./UPGRADE_2X.md) · 计划 `n8n_2.x_upgrade_ca751b02.plan.md`  
-**钉版本：** `n8nio/n8n:2.46.4`（本地已升；远程随 U8 deploy）
+**钉版本：** `n8nio/n8n:2.46.4`（本地 + 远程）
 
 ## 耐久决定
 
@@ -21,7 +21,7 @@
 | 步 | 状态 |
 |----|------|
 | U0–U7 | **完成** |
-| U8 | **进行中**（backup-in-deploy + push main） |
+| U8 | **完成**（Action #16 success；远程 pre-deploy 备份已落盘） |
 | U9 | 未开始 |
 
 ## U6 要点（2026-11-04）

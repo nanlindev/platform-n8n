@@ -1,7 +1,7 @@
 # Execution Map — job memory
 
-**更新：** 2026-11-05（U6 落盘；升级进度见 `00-upgrade-2x-memory.md`）  
-**钉版本：** `n8nio/n8n:2.46.4`（本地；远程待 U8）  
+**更新：** 2026-11-05（U8 远程已升 2.46.4）  
+**钉版本：** `n8nio/n8n:2.46.4`（本地 + 远程）  
 **真源：** [PRD](./EXECUTION_MAP_PRD.md) · [M1 Spike](./EXECUTION_MAP_SPIKE.md) · 应用 [`../execution-map/`](../execution-map/)
 
 ## 耐久决定
@@ -31,5 +31,5 @@ npm install && npm run dev   # http://127.0.0.1:5179
 
 ## 当前步
 
-- **下一步：** U7 审查已写（`UPGRADE_2X.md`）；等 Nan「升远程」再 U8  
+- **下一步：** U9 收尾（文档钉版本 / 升级经验）；可选：本机 ExecMap 切远程 `.env` 抽查  
 - **未做：** 像素编辑器、多租户、M3 correlation_id 树折叠  

@@ -1,7 +1,7 @@
 # n8n 2.x 升级记录（platform-n8n）
 
 计划：[n8n_2.x_upgrade_ca751b02.plan.md](/Users/lotey/.cursor/plans/n8n_2.x_upgrade_ca751b02.plan.md)  
-仓库：`platform-n8n` · 钉版本：`n8nio/n8n:2.46.4`（本地已升；远程 U8 进行中）
+仓库：`platform-n8n` · 钉版本：`n8nio/n8n:2.46.4`（本地 + 远程）
 
 ## 目标版本
 
@@ -261,3 +261,4 @@ cd ~/lindev/platform-n8n
 | 2026-11-04 | U5 | 完成：`zz-smoke parent/child/yellow`；红样 1182→1183（虚线+2r）；黄样 1179（1y）；`npm run build` PASS；PRD §8 全勾；截图入 `upgrade-baseline/` | 原黄样 1133 已不在，新建 yellow；子 WF 须 publish 后 Execute Workflow 才跑得通；CLI execute 需停主进程（Task Broker 端口） |
 | 2026-11-04 | U6 | 完成：platform `--trigger` + doc/kit 三条 + ExecMap CRM 链；并排表见上文 | RSS 本机未导入 → SKIP；`--trigger` 补 Tally `sign`/compact JSON；WF 54 vs U0 51 因 zz-smoke |
 | 2026-11-05 | U7 | 完成：阶段审查写入本文 §U7；闸门/error/Migration 剩余已核对 | **等 Nan「升远程」才进 U8**；凭据 API 403，靠 U6 功能侧证 |
+| 2026-11-05 | U8 | **完成**：远程备份 `/home/deploy/backups/n8n-2026-11-05T054347Z-pre-deploy/`；Deploy [#16](https://github.com/nanlindev/platform-n8n/actions/runs/41992520560) **success**；healthz + `n8n --version` **2.46.4** | 前几次挂在 appleboy `bash -c` 单引号（`tr -d "'"` / awk）；已去掉。本机无远程 API key，完整 `smoke_n8n_platform.py` 未从本机打；以 Action 内 healthz/version 为验收 |
