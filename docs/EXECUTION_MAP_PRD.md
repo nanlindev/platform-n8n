@@ -2,7 +2,7 @@
 
 **状态：** Draft（**M1 spike + M2 MVP 2026-10-20**；硬失败红样 **2026-11-04 本地 2.46.4 补验通过**）  
 **日期：** 2026-10-19（spike/M2：2026-10-20；红样：2026-11-04）  
-**钉版本：** `n8nio/n8n:2.46.4`（本地已升；远程待 U8）  
+**钉版本：** `n8nio/n8n:2.46.4`（本地 + 远程，U8 完成）  
 **受众：** 自用 + 作品展示；非多租户产品  
 **Spike 真源：** [`EXECUTION_MAP_SPIKE.md`](./EXECUTION_MAP_SPIKE.md)
 
@@ -34,7 +34,7 @@
 | 无原生父子时：`customData.correlation_id` JOIN | 依赖 Jaeger / OTel |
 | 黄=实际出错且 continue 的节点 | 靠节点命名后缀 / 业务 JSON 嗅探降级 |
 | 按需 `includeData` + I/O 截断 | 客户/Salah 实例；多租户 SaaS |
-| 钉 2.46.4 | 本地已升离 2.28.7；远程随 U8 |
+| 钉 2.46.4 | 本地 + 远程均已钉；升级过程见 `UPGRADE_2X.md` |
 
 ## 5. 拼图键
 
@@ -78,7 +78,7 @@
 - [x] 硬失败节点/单红。（`zz-smoke parent` **1182** → `zz-smoke child` **1183**：父子虚线 + Issues 2r；截图 `upgrade-baseline/u5-red-parent-child-1182.png`）
 - [x] 节点可看截断 I/O；可深链官方 execution。
 - [x] 不请求 Jaeger；断 OTel 不影响地图。
-- [x] 钉在 2.46.4：本地 compose + Execution Map 文档一致（远程钉版本随 U8）。
+- [x] 钉在 2.46.4：本地 compose + Execution Map 文档一致；远程 U8 已升。
 
 ## 9. 里程碑
 

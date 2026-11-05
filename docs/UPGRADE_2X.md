@@ -226,11 +226,9 @@ cd ~/lindev/platform-n8n
 
 | 项 | 说明 |
 |----|------|
-| 本地未提交 | `compose.yml`→2.46.4、`UPGRADE_2X.md`、`upgrade-baseline/`、`smoke_n8n_platform.py` + triggers、ExecMap 钉版本 docs |
 | RSS | 本机未导入；远程若仍跑 RSS，部署后需单独确认 schedule |
-| zz-smoke ×3 | 本地多出来；远程是否一并导入可选（建议不 active） |
+| zz-smoke ×3 | 本地多出来；远程未强制导入（建议不 active） |
 | OTel | 无 collector 时启动有 OTLP warn（预期）；有 OBS 则 U6 已绿 |
-| 远程 U8 顺序 | 服务器 `pg_dump`+卷备份 → Nan 同意 → commit/push → Action → 远程 smoke |
 
 ### 闸门
 
@@ -262,3 +260,44 @@ cd ~/lindev/platform-n8n
 | 2026-11-04 | U6 | 完成：platform `--trigger` + doc/kit 三条 + ExecMap CRM 链；并排表见上文 | RSS 本机未导入 → SKIP；`--trigger` 补 Tally `sign`/compact JSON；WF 54 vs U0 51 因 zz-smoke |
 | 2026-11-05 | U7 | 完成：阶段审查写入本文 §U7；闸门/error/Migration 剩余已核对 | **等 Nan「升远程」才进 U8**；凭据 API 403，靠 U6 功能侧证 |
 | 2026-11-05 | U8 | **完成**：远程备份 `/home/deploy/backups/n8n-2026-11-05T054347Z-pre-deploy/`；Deploy [#16](https://github.com/nanlindev/platform-n8n/actions/runs/41992520560) **success**；healthz + `n8n --version` **2.46.4** | 前几次挂在 appleboy `bash -c` 单引号（`tr -d "'"` / awk）；已去掉。本机无远程 API key，完整 `smoke_n8n_platform.py` 未从本机打；以 Action 内 healthz/version 为验收 |
+| 2026-11-05 | U9 | 完成：README/PRD/memory 钉 **2.46.4**；下文「升级经验 / 检查清单初稿」；roadmap `upgrade-2x` 勾完 | 历史基线/回滚步骤中的 2.28.7 保留；spike 文档仍记 M1 当时版本 |
+
+## 升级经验 / 检查清单初稿（供 3.0 plan · 升级服务文案）
+
+面向：自己下次升 3.0，或对外「n8n 升级」Catalog 话术底稿。细节与命令以本文 U0–U8 为准。
+
+### A. 升级前
+
+- [ ] 选定 **稳定 2.x**（或目标大版本）：Hub `stable`/`latest` digest 对齐；避开 `next`/`beta` 同 digest 的 tag（本轮弃用 2.47.0）
+- [ ] 工作流元数据快照：`GET /api/v1/workflows` → `id/name/active` JSON（本仓：`docs/upgrade-baseline/`）
+- [ ] 仓外备份：`pg_dump -Fc` + `n8n_data` 卷 tar +（可选）加密 credentials 导出；**勿**把 dump/key 进 git
+- [ ] 写好回滚步骤并演练「能列 TOC / 能读到 dump」即可，不必每次全量 restore
+- [ ] 有 Migration Report（≥2.39）：导出 CSV；**先分桶**「影响当前大版本」vs「只影响下一主版本」
+
+### B. 升级中
+
+- [ ] 改 compose 镜像 tag → pull → up；看 migration 日志 Finished、无 crash loop
+- [ ] 远程：Action **先备份再 pull**（本仓 `scripts/backup_n8n_pre_deploy.sh`）；appleboy `bash -c` **脚本内禁止未转义单引号**
+- [ ] 大跨度升级预留 **/healthz 等待**（本轮 2.28→2.46 DB migration 可数分钟）
+- [ ] 平台级 smoke：`healthz` + 版本号 + 工作流集合 + 近期无 `crashed`；带测试闸门的 webhook 才 `--trigger`
+
+### C. 升级后回归
+
+- [ ] 对外副作用闸门：`mode=test` 仍跳过 CRM/Slack/首触（Sheets 入库可按设计仍写）
+- [ ] `settings.errorWorkflow` 仍挂在业务 WF 上
+- [ ] Execution Map：至少一条父子虚线 + 红/黄样（2.x：子 WF 须 **published** 才可 Execute Workflow）
+- [ ] 垂直 sidecar smoke（crm/ecom/doc）轮流起，M1 8GB 勿一次拉满
+- [ ] Tally 等 HMAC：若 item 无 `rawBody`，签名应对齐 **compact** `JSON.stringify(body)`（JS 无空格）
+
+### D. 本轮可复用话术（短）
+
+> Self-hosted n8n 从 2.28.7 → **2.46.4**：仓外备份 + Migration Report 分桶（2.x 零修复）+ 平台 smoke（含 test-gated webhook）+ Execution Map 红/黄样 + 远程 pre-deploy backup 后 Action 部署。3.0 项（`alwaysOutputData`、Gmail Trigger 1.2、Instance 默认超时等）已登记、未阻塞本次。
+
+### E. 留给 3.0 / Catalog
+
+| 项 | 去向 |
+|----|------|
+| Workflow：`always-output-data-multi-output-v3`、`gmail-trigger-version-v3` | 改 crm/doc 生成器后再导入 |
+| Instance：compression / task timeout / unverified packages / import-from-URL | 环境变量或接受新默认 |
+| `WEBHOOK_URL` → `N8N_WEBHOOK_URL`；internal task runner | 配置卫生 |
+| 对外 Catalog「n8n 升级」 | 复用本节检查清单 + 上表 D 话术 |

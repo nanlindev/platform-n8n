@@ -2,6 +2,8 @@
 
 Shared n8n runtime and Docker templates for automation projects (RSS, CRM, and future workflows).
 
+**Pinned image:** `n8nio/n8n:2.46.4` (local + production). Upgrade record: [`docs/UPGRADE_2X.md`](docs/UPGRADE_2X.md). Platform smoke: `scripts/smoke_n8n_platform.py`.
+
 ## Layout
 
 | Path | Purpose |
